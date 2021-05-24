@@ -1,0 +1,10 @@
+{
+"senderReference": "REF001",
+"senderPartyId": "CLIENT1",
+"senderAccountId": "ACC001",
+"instrumentId": "US02079K1079",
+"receiverPartyId": "COUNTERPARTY1",
+  "receiverAccountId": "ACC100",
+"currency": "GBP",
+"amount": 50000
+}

@@ -1,0 +1,1 @@
+docker exec -it docker_kafka-1_1 bash
