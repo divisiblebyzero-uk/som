@@ -1,0 +1,21 @@
+<div class="container-fluid">
+  <nav class="navbar navbar-expand-sm bg-dark navbar-dark">
+    <a class="navbar-brand" routerLink="">{{title}}</a>
+    
+    <button class="navbar-toggler" type="button" (click)="isMenuCollapsed = !isMenuCollapsed">
+      &#9776;
+    </button>
+
+    <div [ngbCollapse]="isMenuCollapsed" class="collapse navbar-collapse">
+      <ul class="nav navbar-nav">
+        <li class="nav-item " routerLinkActive="active">
+          <a routerLink="settlement-client/new-settlement-request" class="nav-link">New</a>
+        </li>
+        <li class="nav-item " routerLinkActive="active">
+          <a routerLink="settlement-admin/settlement-status" class="nav-link">Status</a>
+        </li>
+      </ul>
+      </div>
+  </nav>
+  <router-outlet></router-outlet>
+</div>

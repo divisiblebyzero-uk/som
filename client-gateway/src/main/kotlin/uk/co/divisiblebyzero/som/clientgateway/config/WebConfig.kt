@@ -16,15 +16,21 @@
  *
  */
 
-package uk.co.divisiblebyzero.som.clientgateway.repositories
+package uk.co.divisiblebyzero.som.clientgateway.config
 
-import org.springframework.data.jpa.repository.JpaRepository
-import org.springframework.data.repository.PagingAndSortingRepository
-import org.springframework.data.rest.core.annotation.RepositoryRestResource
-import org.springframework.stereotype.Service
-import org.springframework.web.bind.annotation.CrossOrigin
-import uk.co.divisiblebyzero.som.clientgateway.model.ReceiveAgainstPayment
-@CrossOrigin(origins = ["http://localhost:4200"])
-@RepositoryRestResource(collectionResourceRel = "receive-against-payments", path = "receive-against-payments")
-interface ReceiveAgainstPaymentRepository : PagingAndSortingRepository<ReceiveAgainstPayment, Long> {
+import org.springframework.context.annotation.Bean
+import org.springframework.context.annotation.Configuration
+import org.springframework.web.servlet.config.annotation.CorsRegistry
+import org.springframework.web.servlet.config.annotation.EnableWebMvc
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter
+
+
+@Configuration
+@EnableWebMvc
+class WebConfig : WebMvcConfigurer {
+    override fun addCorsMappings(registry: CorsRegistry) {
+        System.out.println("yoohoo")
+        registry.addMapping("/**")
+    }
 }

@@ -1,0 +1,30 @@
+<p>settlement-status works!</p>
+
+<button (click)="getReceiveAgainstPayments()">Click</button>
+
+
+<table class="table">
+    <tr>
+        <th>Client Gateway Id</th>
+        <th>Sender Reference Id</th>
+        <th>Sender Party Id</th>
+        <th>Sender Account Id</th>
+        <th>Receiver Party Id</th>
+        <th>Receiver Account Id</th>
+        <th>Instrument Id</th>
+        <th>Currency</th>
+        <th>Amount</th>
+    </tr>
+    <tr *ngFor="let rap of receiveAgainstPayments">
+        <td>{{rap.id}}</td>
+        <td>{{rap.senderReference}}</td>
+        <td>{{rap.senderPartyId}}</td>
+        <td>{{rap.senderAccountId}}</td>
+        <td>{{rap.receiverPartyId}}</td>
+        <td>{{rap.receiverAccountId}}</td>
+        <td>{{rap.instrumentId}}</td>
+        <td>{{rap.currency}}</td>
+        <td>{{rap.amount|currency:rap.currency}}</td>
+    </tr>
+</table>
+
