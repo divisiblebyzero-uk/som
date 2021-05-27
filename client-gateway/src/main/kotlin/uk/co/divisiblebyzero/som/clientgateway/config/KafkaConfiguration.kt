@@ -38,8 +38,6 @@ class KafkaConfiguration {
     @Bean
     fun requestTopic(): NewTopic {
         return TopicBuilder.name("settlement-manager.request")
-                .partitions(1)
-                .replicas(1)
                 .compact()
                 .build()
     }

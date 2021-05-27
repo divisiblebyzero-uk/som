@@ -18,18 +18,16 @@
 
 package uk.co.divisiblebyzero.som.clientgateway.controllers
 
-import com.fasterxml.jackson.databind.ObjectMapper
-import com.fasterxml.jackson.module.kotlin.KotlinModule
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
-import com.fasterxml.jackson.module.kotlin.readValue
 import mu.KotlinLogging
 import org.springframework.http.HttpStatus
 import org.springframework.kafka.core.KafkaTemplate
+import org.springframework.kafka.support.SendResult
 import org.springframework.messaging.handler.annotation.MessageMapping
 import org.springframework.messaging.handler.annotation.SendTo
+import org.springframework.util.concurrent.ListenableFutureCallback
 import org.springframework.web.bind.annotation.*
 import org.springframework.web.server.ResponseStatusException
-import uk.co.divisiblebyzero.som.clientgateway.model.HelloMessage
 import uk.co.divisiblebyzero.som.clientgateway.model.ReceiveAgainstPayment
 import uk.co.divisiblebyzero.som.clientgateway.model.RequestResponse
 import uk.co.divisiblebyzero.som.clientgateway.repositories.AccountRepository
@@ -46,56 +44,63 @@ class ClientRequestController(
         val kafkaTemplate: KafkaTemplate<String, Any>) {
     private val logger = KotlinLogging.logger {}
 
+    fun validateInstrument(receiveAgainstPayment: ReceiveAgainstPayment, errors: MutableList<String>) {
+        if (instrumentRepository.findAllBySymbol(receiveAgainstPayment.instrumentId).count() != 1) {
+            errors.add("Invalid Instrument")
+        }
+    }
+
+    fun validateAccount(accountId: String, partyId: String, errors: MutableList<String>) {
+        if (accountRepository.findByAccountIdAndPartyId(accountId, partyId).count() != 1) {
+            errors.add("Invalid account/party combination")
+        }
+    }
+
+    fun validateSenderAccount(receiveAgainstPayment: ReceiveAgainstPayment, errors: MutableList<String>) {
+        validateAccount(receiveAgainstPayment.senderAccountId, receiveAgainstPayment.senderPartyId, errors)
+    }
+
+    fun validateReceiverAccount(receiveAgainstPayment: ReceiveAgainstPayment, errors: MutableList<String>) {
+        validateAccount(receiveAgainstPayment.receiverAccountId, receiveAgainstPayment.receiverPartyId, errors)
+    }
+
 
     @MessageMapping("/settlement-request")
     @SendTo("/topic/settlement-request-response")
-    fun processRequest(receiveAgainstPayment: ReceiveAgainstPayment): RequestResponse {
-        logger.info("Processing request")
-        rapRepository.save(receiveAgainstPayment)
-        if (!validateInstrument(receiveAgainstPayment)) {
-            return RequestResponse(originalRequest = receiveAgainstPayment, status = "Error", message = "Invalid Instrument")
-        }
-        if (!validateSenderAccount(receiveAgainstPayment)) {
-            return RequestResponse(originalRequest = receiveAgainstPayment, status = "Error", message = "Invalid Sender Account")
-        }
-        if (!validateReceiverAccount(receiveAgainstPayment)) {
-            return RequestResponse(originalRequest = receiveAgainstPayment, status = "Error", message = "Invalid Receiver Account")
-        }
-        kafkaTemplate.send("settlement-manager.request", receiveAgainstPayment)
-        return RequestResponse(originalRequest = receiveAgainstPayment, status = "Accepted", message = "Accepted")
-    }
-
-    fun validateInstrument(receiveAgainstPayment: ReceiveAgainstPayment): Boolean {
-        return (instrumentRepository.findAllBySymbol(receiveAgainstPayment.instrumentId).count() == 1)
-    }
-
-    fun validateAccount(accountId: String, partyId: String): Boolean {
-        return (accountRepository.findByAccountIdAndPartyId(accountId, partyId).count() == 1)
-    }
-
-    fun validateSenderAccount(receiveAgainstPayment: ReceiveAgainstPayment): Boolean {
-        return validateAccount(receiveAgainstPayment.senderAccountId, receiveAgainstPayment.senderPartyId)
-    }
-
-    fun validateReceiverAccount(receiveAgainstPayment: ReceiveAgainstPayment): Boolean {
-        return validateAccount(receiveAgainstPayment.receiverAccountId, receiveAgainstPayment.receiverPartyId)
-    }
-
-/*    @PostMapping("/requestARAP")
-    fun processRequestPost(@RequestBody receiveAgainstPayment: ReceiveAgainstPayment): String {
+    @PostMapping("/requestARAP")
+    fun processRequestPost(@RequestBody receiveAgainstPayment: ReceiveAgainstPayment): RequestResponse {
         logger.info("Receive post request")
         rapRepository.save(receiveAgainstPayment)
-        if (!validateInstrument(receiveAgainstPayment)) {
-            throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid instrument")
+        val errors: MutableList<String> = ArrayList<String>()
+        validateInstrument(receiveAgainstPayment, errors)
+        validateSenderAccount(receiveAgainstPayment, errors)
+        validateReceiverAccount(receiveAgainstPayment, errors)
+        if (errors.size > 0) {
+            return RequestResponse(originalRequest = receiveAgainstPayment, status = "REJECTED", message = errors[0])
         }
-        if (!validateSenderAccount(receiveAgainstPayment)) {
-            throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid sender account")
-        }
-        if (!validateReceiverAccount(receiveAgainstPayment)) {
-            throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid receiver account")
-        }
-        kafkaTemplate.send("settlement-manager.request", receiveAgainstPayment)
-        return receiveAgainstPayment.toString()
-    }*/
+
+        var payload = jacksonObjectMapper().writeValueAsString(receiveAgainstPayment)
+        sendMessage(payload, receiveAgainstPayment.id.toString(), "settlement-manager.request")
+        return RequestResponse(originalRequest = receiveAgainstPayment, status = "ACCEPTED", message = "ACCEPTED")
+    }
+
+    fun sendMessage(payload: String, id: String, topic: String) {
+
+        var listenableFuture = kafkaTemplate.send("settlement-manager.request", id, payload)
+
+        listenableFuture.addCallback(object : ListenableFutureCallback<SendResult<String, Any>?> {
+            override fun onSuccess(result: SendResult<String, Any>?) {
+                logger.info {
+                    "Sent message=[$payload] to topic=[/settlement-manager.request] with offset=[result.recordMetadata.offset()]"
+                }
+            }
+
+            override fun onFailure(ex: Throwable) {
+                logger.error(ex) {
+                    "Unable to send message=[$payload] due to: $ex"
+                }
+            }
+        })
+    }
 
 }
