@@ -8,6 +8,8 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { NewSettlementRequestComponent } from './SettlementClient/new-settlement-request/new-settlement-request.component';
 import { WelcomeComponent } from './welcome/welcome.component';
 import { SettlementStatusComponent } from './SettlementAdmin/settlement-status/settlement-status.component';
+import { InjectableRxStompConfig, RxStompService, rxStompServiceFactory } from '@stomp/ng2-stompjs';
+import { somStompConfig } from './stomp-config';
 
 @NgModule({
   declarations: [
@@ -22,7 +24,10 @@ import { SettlementStatusComponent } from './SettlementAdmin/settlement-status/s
     NgbModule,
     HttpClientModule
   ],
-  providers: [],
+  providers: [
+    { provide: InjectableRxStompConfig, useValue: somStompConfig },
+    { provide: RxStompService, useFactory: rxStompServiceFactory, deps: [InjectableRxStompConfig]}
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

@@ -1,6 +1,6 @@
 <p>settlement-status works!</p>
 
-<button (click)="getReceiveAgainstPayments()">Click</button>
+<button (click)="getReceiveAgainstPayments()">refresh</button>
 
 
 <table class="table">
@@ -28,3 +28,6 @@
     </tr>
 </table>
 
+<button (click)="send()">Send</button>
+
+<li class="message" *ngFor="let message of receivedMessages">{{message|json}}</li>

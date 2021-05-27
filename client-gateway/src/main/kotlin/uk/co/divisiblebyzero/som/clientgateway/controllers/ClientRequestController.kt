@@ -18,15 +18,24 @@
 
 package uk.co.divisiblebyzero.som.clientgateway.controllers
 
+import com.fasterxml.jackson.databind.ObjectMapper
+import com.fasterxml.jackson.module.kotlin.KotlinModule
+import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
+import com.fasterxml.jackson.module.kotlin.readValue
+import mu.KotlinLogging
 import org.springframework.http.HttpStatus
 import org.springframework.kafka.core.KafkaTemplate
+import org.springframework.messaging.handler.annotation.MessageMapping
+import org.springframework.messaging.handler.annotation.SendTo
 import org.springframework.web.bind.annotation.*
 import org.springframework.web.server.ResponseStatusException
-import uk.co.divisiblebyzero.som.clientgateway.model.Account
+import uk.co.divisiblebyzero.som.clientgateway.model.HelloMessage
 import uk.co.divisiblebyzero.som.clientgateway.model.ReceiveAgainstPayment
+import uk.co.divisiblebyzero.som.clientgateway.model.RequestResponse
 import uk.co.divisiblebyzero.som.clientgateway.repositories.AccountRepository
 import uk.co.divisiblebyzero.som.clientgateway.repositories.InstrumentRepository
 import uk.co.divisiblebyzero.som.clientgateway.repositories.ReceiveAgainstPaymentRepository
+
 
 @CrossOrigin(origins = ["http://localhost:4200"])
 @RestController
@@ -35,11 +44,25 @@ class ClientRequestController(
         val instrumentRepository: InstrumentRepository,
         val accountRepository: AccountRepository,
         val kafkaTemplate: KafkaTemplate<String, Any>) {
+    private val logger = KotlinLogging.logger {}
 
 
-    @GetMapping("/request")
-    fun index(): String {
-        return "received"
+    @MessageMapping("/settlement-request")
+    @SendTo("/topic/settlement-request-response")
+    fun processRequest(receiveAgainstPayment: ReceiveAgainstPayment): RequestResponse {
+        logger.info("Processing request")
+        rapRepository.save(receiveAgainstPayment)
+        if (!validateInstrument(receiveAgainstPayment)) {
+            return RequestResponse(originalRequest = receiveAgainstPayment, status = "Error", message = "Invalid Instrument")
+        }
+        if (!validateSenderAccount(receiveAgainstPayment)) {
+            return RequestResponse(originalRequest = receiveAgainstPayment, status = "Error", message = "Invalid Sender Account")
+        }
+        if (!validateReceiverAccount(receiveAgainstPayment)) {
+            return RequestResponse(originalRequest = receiveAgainstPayment, status = "Error", message = "Invalid Receiver Account")
+        }
+        kafkaTemplate.send("settlement-manager.request", receiveAgainstPayment)
+        return RequestResponse(originalRequest = receiveAgainstPayment, status = "Accepted", message = "Accepted")
     }
 
     fun validateInstrument(receiveAgainstPayment: ReceiveAgainstPayment): Boolean {
@@ -58,8 +81,9 @@ class ClientRequestController(
         return validateAccount(receiveAgainstPayment.receiverAccountId, receiveAgainstPayment.receiverPartyId)
     }
 
-    @PostMapping("/request")
-    fun processRequest(@RequestBody receiveAgainstPayment: ReceiveAgainstPayment): String {
+/*    @PostMapping("/requestARAP")
+    fun processRequestPost(@RequestBody receiveAgainstPayment: ReceiveAgainstPayment): String {
+        logger.info("Receive post request")
         rapRepository.save(receiveAgainstPayment)
         if (!validateInstrument(receiveAgainstPayment)) {
             throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid instrument")
@@ -72,6 +96,6 @@ class ClientRequestController(
         }
         kafkaTemplate.send("settlement-manager.request", receiveAgainstPayment)
         return receiveAgainstPayment.toString()
-    }
+    }*/
 
 }
