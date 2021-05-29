@@ -18,6 +18,7 @@
 
 package uk.co.divisiblebyzero.som.clientgateway.config
 
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.Configuration
 import org.springframework.messaging.simp.config.MessageBrokerRegistry
 import org.springframework.web.socket.config.annotation.EnableWebSocketMessageBroker
@@ -27,12 +28,15 @@ import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerCo
 @Configuration
 @EnableWebSocketMessageBroker
 class WebSocketConfig : WebSocketMessageBrokerConfigurer {
+    @Value("\${som.ui.url}")
+    private val uiUrl: String? = null
+
     override fun configureMessageBroker(config: MessageBrokerRegistry) {
         config.enableSimpleBroker("/topic")
         config.setApplicationDestinationPrefixes("/app")
     }
 
     override fun registerStompEndpoints(registry: StompEndpointRegistry) {
-        registry.addEndpoint("/som-websocket").setAllowedOrigins("http://localhost:4200")//.withSockJS()
+        registry.addEndpoint("/som-websocket").setAllowedOrigins(uiUrl)//.withSockJS()
     }
 }

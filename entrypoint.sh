@@ -16,15 +16,5 @@
 #
 #
 
-spring.kafka.consumer.auto-offset-reset=earliest
-spring.kafka.producer.key-serializer: org.apache.kafka.common.serialization.StringSerializer
-spring.kafka.producer.value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
-
-server.servlet.contextPath=/api/
-server.error.include-message=always
-
-som.kafka.bootstrap-server=localhostx:9092
-som.ui.url=http://localhost:4200
-
-som.settlement-manager.kafka.topic.request=settlement-manager.request
-som.settlement-manager.kafka.topic.response=settlement-manager.response
+cd /home/compiler
+mvn package -DskipTests
