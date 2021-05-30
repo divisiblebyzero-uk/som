@@ -10,4 +10,4 @@ This should start a network consisting of:
 * One Kafka broker
 * One instance of client-broker (listening on port 8080)
 * One instance of settlement-manager (listening on port 8081)
-* [still to do] One instance of the admin GUI (listening on port 8000)
+* One instance of the admin GUI (listening on port 8888)

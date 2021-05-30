@@ -1,13 +1,16 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { RxStompService } from '@stomp/ng2-stompjs';
+import { environment } from '../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class CommsService {
 
-  clientGatewayUrl = 'http://localhost:8080/api';
+
+
+  clientGatewayUrl = environment.apiUrl + '/api';
 
   constructor(private http: HttpClient, private rxStompService: RxStompService) { }
 

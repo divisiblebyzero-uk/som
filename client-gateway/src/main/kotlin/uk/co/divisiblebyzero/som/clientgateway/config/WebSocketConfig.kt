@@ -37,6 +37,7 @@ class WebSocketConfig : WebSocketMessageBrokerConfigurer {
     }
 
     override fun registerStompEndpoints(registry: StompEndpointRegistry) {
-        registry.addEndpoint("/som-websocket").setAllowedOrigins(uiUrl)//.withSockJS()
+        //registry.addEndpoint("/som-websocket").setAllowedOrigins(uiUrl, "http://localhost:8888")//.withSockJS()
+        registry.addEndpoint("/som-websocket").setAllowedOrigins("*")//.withSockJS()
     }
 }

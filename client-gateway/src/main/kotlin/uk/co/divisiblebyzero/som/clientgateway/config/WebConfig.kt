@@ -27,10 +27,23 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter
 
 
 @Configuration
-@EnableWebMvc
 class WebConfig : WebMvcConfigurer {
     override fun addCorsMappings(registry: CorsRegistry) {
         System.out.println("yoohoo")
-        registry.addMapping("/**")
+/*        registry.addMapping("/**")
+            .allowedMethods("GET", "POST")
+            .allowedOrigins("http://localhost:8888")
+            .allowedHeaders("*")
+            .allowCredentials(false)
+            .maxAge(-1)
+            */
+ */
+/*        registry.addMapping("/api/**")
+            .allowedMethods("GET", "POST", "PUT", "DELETE")
+            .allowedOrigins("*")
+            .allowedHeaders("*")
+            .allowCredentials(false);
+            */
+ */
     }
 }

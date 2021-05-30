@@ -35,7 +35,7 @@ import uk.co.divisiblebyzero.som.clientgateway.repositories.InstrumentRepository
 import uk.co.divisiblebyzero.som.clientgateway.repositories.ReceiveAgainstPaymentRepository
 
 
-@CrossOrigin(origins = ["http://localhost:4200"])
+@CrossOrigin(origins = ["http://localhost:4200", "http://localhost:8888"])
 @RestController
 class ClientRequestController(
         val rapRepository: ReceiveAgainstPaymentRepository,

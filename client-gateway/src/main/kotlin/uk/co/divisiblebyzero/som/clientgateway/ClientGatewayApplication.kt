@@ -20,9 +20,17 @@ package uk.co.divisiblebyzero.som.clientgateway
 
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
+import org.springframework.context.annotation.Bean
+import org.springframework.web.servlet.config.annotation.CorsRegistry
+
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer
+
+
+
 
 @SpringBootApplication
 class ClientGatewayApplication
+
 
 fun main(args: Array<String>) {
 	runApplication<ClientGatewayApplication>(*args)

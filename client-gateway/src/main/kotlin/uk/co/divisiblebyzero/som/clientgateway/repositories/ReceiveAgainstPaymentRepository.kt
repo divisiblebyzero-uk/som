@@ -24,7 +24,7 @@ import org.springframework.data.rest.core.annotation.RepositoryRestResource
 import org.springframework.stereotype.Service
 import org.springframework.web.bind.annotation.CrossOrigin
 import uk.co.divisiblebyzero.som.clientgateway.model.ReceiveAgainstPayment
-@CrossOrigin(origins = ["http://localhost:4200"])
+@CrossOrigin(origins = ["http://localhost:4200", "http://localhost:8888"])
 @RepositoryRestResource(collectionResourceRel = "receive-against-payments", path = "receive-against-payments")
 interface ReceiveAgainstPaymentRepository : PagingAndSortingRepository<ReceiveAgainstPayment, Long> {
 }
