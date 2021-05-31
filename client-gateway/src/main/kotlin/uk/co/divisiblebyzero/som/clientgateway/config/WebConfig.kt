@@ -18,18 +18,14 @@
 
 package uk.co.divisiblebyzero.som.clientgateway.config
 
-import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.web.servlet.config.annotation.CorsRegistry
-import org.springframework.web.servlet.config.annotation.EnableWebMvc
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter
 
 
 @Configuration
 class WebConfig : WebMvcConfigurer {
     override fun addCorsMappings(registry: CorsRegistry) {
-        System.out.println("yoohoo")
 /*        registry.addMapping("/**")
             .allowedMethods("GET", "POST")
             .allowedOrigins("http://localhost:8888")
