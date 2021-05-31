@@ -18,8 +18,6 @@
 
 package uk.co.divisiblebyzero.som.clientgateway
 
-import com.fasterxml.jackson.databind.ObjectMapper
-import com.fasterxml.jackson.module.kotlin.KotlinModule
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
 import mu.KotlinLogging
@@ -30,23 +28,11 @@ class SerialisationTests {
     private val logger = KotlinLogging.logger {}
     @Test
     fun testDeserialisation() {
-        val request2 = "{\n" +
-                "\"senderReference\": \"REF001\",\n" +
-                "\"senderPartyId\": \"CLIENT1\",\n" +
-                "\"senderAccountId\": \"ACC001\",\n" +
-                "\"instrumentId\": \"US02079K1079\",\n" +
-                "\"receiverPartyId\": \"COUNTERPARTY1\",\n" +
-                "  \"receiverAccountId\": \"ACC100\",\n" +
-                "\"currency\": \"GBP\",\n" +
-                "\"amount\": 50000\n" +
-                "}";
-        val request = "{\"id\": 12312, \"senderReference\": \"REF001\",\"senderPartyId\": \"CLIENT1\",\"senderAccountId\": \"ACC001\",\"instrumentId\": \"US02079K1079\",\"receiverPartyId\": \"COUNTERPARTY1\",  \"receiverAccountId\": \"ACC100\",\"currency\": \"GBP\",\"amount\": 50000}";
-        logger.info("Received: " + request);
-        //val objectMapper: ObjectMapper = ObjectMapper()
-        //val objectMapper = ObjectMapper().registerModule(KotlinModule())
+        val request = "{\"senderReference\":\"REF001\",\"senderPartyId\":\"CLIENT1\",\"senderAccountId\":\"ACC001\",\"instrumentId\":\"US02079K1079\",\"receiverPartyId\":\"COUNTERPARTY1\",\"receiverAccountId\":\"ACC100\",\"currency\":\"GBP\",\"amount\":50000.0,\"id\":12312,\"status\":\"NEW\"}"
+        logger.info("Received: " + request)
         val objectMapper = jacksonObjectMapper()
         val rap: ReceiveAgainstPayment = objectMapper.readValue(request)
-        logger.info("Mapped to: " + rap);
+        logger.info("Mapped to: " + rap)
 
     }
 }

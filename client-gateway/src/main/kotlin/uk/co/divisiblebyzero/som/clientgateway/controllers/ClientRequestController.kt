@@ -18,16 +18,16 @@
 
 package uk.co.divisiblebyzero.som.clientgateway.controllers
 
-import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import mu.KotlinLogging
-import org.springframework.http.HttpStatus
 import org.springframework.kafka.core.KafkaTemplate
 import org.springframework.kafka.support.SendResult
 import org.springframework.messaging.handler.annotation.MessageMapping
 import org.springframework.messaging.handler.annotation.SendTo
 import org.springframework.util.concurrent.ListenableFutureCallback
-import org.springframework.web.bind.annotation.*
-import org.springframework.web.server.ResponseStatusException
+import org.springframework.web.bind.annotation.CrossOrigin
+import org.springframework.web.bind.annotation.PostMapping
+import org.springframework.web.bind.annotation.RequestBody
+import org.springframework.web.bind.annotation.RestController
 import uk.co.divisiblebyzero.som.clientgateway.model.ReceiveAgainstPayment
 import uk.co.divisiblebyzero.som.clientgateway.model.RequestResponse
 import uk.co.divisiblebyzero.som.clientgateway.repositories.AccountRepository
@@ -79,14 +79,13 @@ class ClientRequestController(
             return RequestResponse(originalRequest = receiveAgainstPayment, status = "REJECTED", message = errors[0])
         }
 
-        var payload = jacksonObjectMapper().writeValueAsString(receiveAgainstPayment)
-        sendMessage(payload, receiveAgainstPayment.id.toString(), "settlement-manager.request")
+        sendMessage(receiveAgainstPayment, receiveAgainstPayment.id.toString(), "settlement-manager.request")
         return RequestResponse(originalRequest = receiveAgainstPayment, status = "ACCEPTED", message = "ACCEPTED")
     }
 
-    fun sendMessage(payload: String, id: String, topic: String) {
+    fun sendMessage(payload: ReceiveAgainstPayment, id: String, topic: String) {
 
-        var listenableFuture = kafkaTemplate.send("settlement-manager.request", id, payload)
+        val listenableFuture = kafkaTemplate.send("settlement-manager.request", id, payload)
 
         listenableFuture.addCallback(object : ListenableFutureCallback<SendResult<String, Any>?> {
             override fun onSuccess(result: SendResult<String, Any>?) {

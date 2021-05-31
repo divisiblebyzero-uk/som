@@ -33,5 +33,6 @@ data class ReceiveAgainstPayment(
         val receiverAccountId: String,
         val currency: String,
         val amount: Double,
-        @Id @GeneratedValue val id: Long? = null
+        @Id @GeneratedValue val id: Long? = null,
+        val status: String = "NEW"
         )
