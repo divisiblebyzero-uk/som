@@ -1,1 +1,98 @@
-<p>new-settlement-request works!</p>
+<div class="col">
+    <div class="row">
+        <h2>Send new settlement instruction</h2>
+    </div>
+    <div class="row">
+        <div class="col">
+            <div class="btn-group btn-group-toggle" ngbRadioGroup name="radioBasic" [(ngModel)]="receiveOrDeliver">
+                <label ngbButtonLabel class="btn-primary">
+                    <input ngbButton type="radio" value="receive"> Receive
+                </label>
+                <label ngbButtonLabel class="btn-primary">
+                    <input ngbButton type="radio" value="deliver"> Deliver
+                </label>
+            </div>
+        </div>
+        <div class="col">
+            <div class="btn-group btn-group-toggle" ngbRadioGroup name="radioBasic" [(ngModel)]="freeOrAgainstPayment">
+                <label ngbButtonLabel class="btn-primary">
+                    <input ngbButton type="radio" value="free"> Free
+                </label>
+                <label ngbButtonLabel class="btn-primary">
+                    <input ngbButton type="radio" value="againstPayment"> Against Payment
+                </label>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <h3>Receive Against Payment</h3>
+    </div>
+    <div class="row">
+        <form [formGroup]="rapForm" (ngSubmit)="onSubmit()">
+            <div class="form-group">
+                <label>Sender Reference</label>
+                <input type="text" formControlName="senderReference" placeholder="Sender Reference" class="form-control">
+            </div>
+            <div class="form-group">
+                <label>Sender Party Id</label>
+                <input type="text" formControlName="senderPartyId" placeholder="Sender Party Id" class="form-control">
+            </div>
+            <div class="form-group">
+                <label>Sender Account Id</label>
+                <input type="text" formControlName="senderAccountId" placeholder="Sender Account Id" class="form-control">
+            </div>
+            <div class="form-group">
+                <label>Receiver Party Id</label>
+                <input type="text" formControlName="receiverPartyId" placeholder="Receiver Party Id" class="form-control">
+            </div>
+            <div class="form-group">
+                <label>Receiver Account Id</label>
+                <input type="text" formControlName="receiverAccountId" placeholder="Receiver Account Id" class="form-control">
+            </div>
+            <div class="form-group">
+                <label>Instrument Id</label>
+                <input type="text" formControlName="instrumentId" placeholder="Instrument Id" class="form-control">
+            </div>
+            <div class="form-group">
+                <label>Currency</label>
+                <input type="text" formControlName="currency" placeholder="Currency" class="form-control">
+            </div>
+            <div class="form-group">
+                <label>Amount</label>
+                <input type="text" formControlName="amount" placeholder="Amount" class="form-control">
+            </div>
+            <div class="hidden">
+                <input type="text" formControlName="id" placeholder="Id" class="form-control">
+            </div>
+            <div class="hidden">
+                <input type="text" formControlName="status" placeholder="Status" class="form-control">
+            </div>
+            <div class="form-group">
+            <button class="btn btn-success" [disabled]="!rapForm.valid">Send</button>
+        </div>
+        </form>
+
+    </div>
+    <div class="row">
+        <button class="btn btn-warning" (click)="populateRAPWithDummyData()">Populate</button>
+
+    </div>
+</div>
+
+<!--
+        id: number,
+    senderReference: String,
+    senderPartyId: String,
+    senderAccountId: String,
+    instrumentId: String,
+    receiverPartyId: String,
+    receiverAccountId: String,
+    currency: String,
+    amount: number,
+    status: String
+-->
+
+
+<hr>
+<pre>{{receiveOrDeliver}}</pre>
+<pre>{{freeOrAgainstPayment}}</pre>

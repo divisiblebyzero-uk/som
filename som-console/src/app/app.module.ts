@@ -10,6 +10,7 @@ import { WelcomeComponent } from './welcome/welcome.component';
 import { SettlementStatusComponent } from './SettlementAdmin/settlement-status/settlement-status.component';
 import { InjectableRxStompConfig, RxStompService, rxStompServiceFactory } from '@stomp/ng2-stompjs';
 import { somStompConfig } from './stomp-config';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [
@@ -22,7 +23,9 @@ import { somStompConfig } from './stomp-config';
     BrowserModule,
     AppRoutingModule,
     NgbModule,
-    HttpClientModule
+    HttpClientModule,
+    FormsModule,
+    ReactiveFormsModule
   ],
   providers: [
     { provide: InjectableRxStompConfig, useValue: somStompConfig },

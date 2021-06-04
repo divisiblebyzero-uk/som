@@ -29,7 +29,7 @@ export class SettlementStatusComponent implements OnInit {
   }
 
   send() {
-    this.comms.sendReceiveAgainstPayment();
+    this.comms.sendDummyReceiveAgainstPayment();
   }
 
 }
