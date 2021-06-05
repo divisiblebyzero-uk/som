@@ -10,3 +10,9 @@ export interface ReceiveAgainstPayment {
     amount: number,
     status?: String
 }
+
+export interface RequestResponse {
+    originalRequest: ReceiveAgainstPayment,
+    status: string,
+    message: string
+}

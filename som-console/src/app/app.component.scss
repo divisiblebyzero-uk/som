@@ -1,0 +1,16 @@
+div#indicator {
+    width: 12px;
+    height: 12px;
+    border-radius: 6px;
+    margin: 0 10px;
+    display: inline-block;
+    background: #ffbf00; /* Ember by default, will be used for CONNECTING and CLOSING */
+}
+
+div.CLOSED#indicator {
+    background: red;
+}
+
+div.OPEN#indicator {
+    background: green;
+}

@@ -1,7 +1,7 @@
 <div class="container-fluid">
   <nav class="navbar navbar-expand-sm bg-dark navbar-dark">
     <a class="navbar-brand" routerLink="">{{title}}</a>
-    
+
     <button class="navbar-toggler" type="button" (click)="isMenuCollapsed = !isMenuCollapsed">
       &#9776;
     </button>
@@ -15,7 +15,11 @@
           <a routerLink="settlement-admin/settlement-status" class="nav-link">Status</a>
         </li>
       </ul>
-      </div>
+    </div>
+    <span class="navbar-text ml-auto">
+      <div id="indicator" class="{{connectionStatus$|async}}"></div>
+      <span id="status-label">{{connectionStatus$|async}}</span>
+    </span>
   </nav>
   <router-outlet></router-outlet>
 </div>
