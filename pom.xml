@@ -39,5 +39,6 @@
     <modules>
         <module>client-gateway</module>
         <module>settlement-manager</module>
+        <module>workflow-manager</module>
     </modules>
 </project>
