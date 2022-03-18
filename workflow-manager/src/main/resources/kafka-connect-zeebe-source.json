@@ -1,0 +1,16 @@
+{
+  "name": "ZeebeSourceConnectorConnector_0",
+  "config": {
+    "name": "ZeebeSourceConnectorConnector_0",
+    "connector.class": "io.zeebe.kafka.connect.ZeebeSourceConnector",
+    "tasks.max": "1",
+    "key.converter": "org.apache.kafka.connect.storage.StringConverter",
+    "value.converter": "org.apache.kafka.connect.storage.StringConverter",
+    "zeebe.client.gateway.address": "zeebe:26500",
+    "zeebe.client.requestTimeout": "10000",
+    "zeebe.client.security.plaintext": "true",
+    "zeebe.client.worker.name": "kafka-connector-zeebe-source",
+    "job.types": "validate-transaction",
+    "job.header.topics": "kafka-topic"
+  }
+}

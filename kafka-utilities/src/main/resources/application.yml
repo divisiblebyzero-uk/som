@@ -18,10 +18,13 @@
 
 spring:
   kafka:
+    bootstrap-servers: localhost:9092
     consumer:
       auto-offset-reset: earliest
       group-id: som-testing
-      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+        #org.springframework.kafka.support.serializer.JsonDeserializer
       properties:
         spring:
           json:
@@ -31,18 +34,8 @@ spring:
     producer:
       value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
 
-server:
-  port: 7080
-  servlet:
-    contextPath: /api/
-  error:
-    include-message: always
-
 som:
-  ui:
-    url: http://localhost:4200
-  settlement-manager:
+  kafka-utilities:
     kafka:
       topic:
-        request: settlement-manager.request
-        response: settlement-manager.response
+        echo-from: echo-from-topic

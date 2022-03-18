@@ -41,5 +41,10 @@ class WorkflowDeploymentService(
         logger.info("Deployment complete. Version: {}", version)
     }
 
+    fun configureConnectors() {
+        logger.info("configuring connectors")
+        // curl -X POST -H "Content-Type: application/json" --data @kafka-connect-zeebe-source.json http://localhost:8083/connectors
+        // curl -X POST -H "Content-Type: application/json" --data @kafka-connect-zeebe-sink.json http://localhost:8083/connectors
+    }
 
 }

@@ -16,28 +16,15 @@
  *
  */
 
-package uk.divisiblebyzero.som.transactionmanager
+package uk.co.divisiblebyzero.som.kafkautiltiies
 
-import org.springframework.boot.CommandLineRunner
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
-import org.springframework.context.ApplicationContext
-import org.springframework.context.annotation.Bean
+
 
 @SpringBootApplication
-class Application(
-    private val workflowDeploymentService: WorkflowDeploymentService,
-    private val workflowInstantiationService: WorkflowInstantiationService,
-    private val validateTransactionWorkerService: ValidateTransactionWorkerService
-    ) {
+class Application
 
-    @Bean
-    fun commandLineRunner(ctx: ApplicationContext): CommandLineRunner = CommandLineRunner {
-        workflowDeploymentService.deployWorkflow()
-        workflowInstantiationService.instantiateWorkflow()
-        validateTransactionWorkerService.register()
-    }
-}
 
 fun main(args: Array<String>) {
     runApplication<Application>(*args)

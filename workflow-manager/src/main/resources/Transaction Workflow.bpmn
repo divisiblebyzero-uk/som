@@ -8,6 +8,9 @@
     <bpmn:serviceTask id="Activity_1uhuqtq" name="Validate request details">
       <bpmn:extensionElements>
         <zeebe:taskDefinition type="validate-transaction" />
+        <zeebe:taskHeaders>
+          <zeebe:header key="kafka-topic" value="validate-transaction-request" />
+        </zeebe:taskHeaders>
       </bpmn:extensionElements>
       <bpmn:incoming>Flow_013btxq</bpmn:incoming>
       <bpmn:outgoing>Flow_03erfmc</bpmn:outgoing>
